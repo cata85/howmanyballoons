@@ -3,31 +3,102 @@ package api
 import (
 	"net/http"
 
+	"github.com/cata85/balloons/db"
 	"github.com/cata85/balloons/types"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
 )
 
-var user *(types.User)
+var user *types.User
 
 /**
  * Method:   POST
- * Endpoint: /
- * When the user submits the balloon object creation form.
- * Sends the balloon object to be calculated and upserts into postgres
+ * Endpoint: /login
+ * When the user submits username and password to login.
  */
 func HandlerPostLogin(c *gin.Context) {
 	if user == nil {
 		user = new(types.User)
 	}
+	session, _ := store.Get(c.Request, "session")
 
 	user.Name = c.PostForm("username")
-	hash, _ := bcrypt.GenerateFromPassword([]byte(c.PostForm("password")), 0)
-	user.Password = string(hash)
+	user.Password = c.PostForm("password")
+	dbUser := db.GetOneUser(user.Name)
+	if dbUser != nil {
+		err := bcrypt.CompareHashAndPassword([]byte(dbUser.Password), []byte(user.Password))
+		if err == nil {
+			if user.Name == "admin" {
+				session.Values["is_admin"] = true
+			} else {
+				session.Values["is_admin"] = false
+			}
+			session.Values["name"] = user.Name
+			session.Values["logged_in"] = true
+
+			_ = session.Save(c.Request, c.Writer)
+		}
+	}
+
 	c.HTML(http.StatusOK, "index.html", gin.H{
 		"itemName":       balloonObject.Name,
 		"itemWeight":     balloonObject.Weight,
 		"itemBalloons":   balloonObject.Balloons,
 		"itemWeightType": balloonObject.WeightType,
+		"name":           session.Values["name"],
+		"is_admin":       session.Values["is_admin"],
+		"logged_in":      session.Values["logged_in"],
+	})
+}
+
+/**
+ * Method:   POST
+ * Endpoint: /signup
+ * When the user submits username and password to signup.
+ */
+func HandlerPostSignup(c *gin.Context) {
+	if user == nil {
+		user = new(types.User)
+	}
+	session, _ := store.Get(c.Request, "session")
+
+	user.Name = c.PostForm("username")
+	hash, _ := bcrypt.GenerateFromPassword([]byte(c.PostForm("password")), bcrypt.DefaultCost)
+	user.Password = string(hash)
+	db.SaveUser(*user)
+	c.HTML(http.StatusOK, "index.html", gin.H{
+		"itemName":       balloonObject.Name,
+		"itemWeight":     balloonObject.Weight,
+		"itemBalloons":   balloonObject.Balloons,
+		"itemWeightType": balloonObject.WeightType,
+		"name":           session.Values["name"],
+		"is_admin":       session.Values["is_admin"],
+		"logged_in":      session.Values["logged_in"],
+	})
+}
+
+/**
+ * Method:   GET
+ * Endpoint: /logout
+ * Logs the user out.
+ */
+func HandlerGetLogout(c *gin.Context) {
+	if user == nil {
+		user = new(types.User)
+	}
+	session, _ := store.Get(c.Request, "session")
+	session.Values["name"] = ""
+	session.Values["logged_in"] = false
+	session.Values["is_admin"] = false
+	_ = session.Save(c.Request, c.Writer)
+
+	c.HTML(http.StatusOK, "index.html", gin.H{
+		"itemName":       balloonObject.Name,
+		"itemWeight":     balloonObject.Weight,
+		"itemBalloons":   balloonObject.Balloons,
+		"itemWeightType": balloonObject.WeightType,
+		"name":           session.Values["name"],
+		"is_admin":       session.Values["is_admin"],
+		"logged_in":      session.Values["logged_in"],
 	})
 }

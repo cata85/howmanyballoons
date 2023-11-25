@@ -20,7 +20,7 @@ type User struct {
 }
 
 /**
- * Creates the Postgres balloon_objects_collection table
+ * Creates the Postgres users_collection table
  */
 func CreateUserTable(db *pg.DB) error {
 	opts := &orm.CreateTableOptions{
@@ -36,7 +36,7 @@ func CreateUserTable(db *pg.DB) error {
 }
 
 /**
- * This is the Saving function for the balloon object type.
+ * This is the Saving function for the user type.
  */
 func (user *User) Save(db *pg.DB) error {
 	_, insertErr := db.Model(user).
@@ -51,8 +51,8 @@ func (user *User) Save(db *pg.DB) error {
 }
 
 /**
- * This prepares to save a single balloon object.
- * The balloon object is sent over to the balloon's "Save()" method.
+ * This prepares to save a single user.
+ * The user is sent over to the user's "Save()" method.
  */
 func SaveUser(user types.User) {
 	if user.Name != "" && user.Password != "" {
@@ -68,4 +68,19 @@ func SaveUser(user types.User) {
 		newUser.Save(db)
 	}
 	return
+}
+
+/**
+ * This gives a user given a username.
+ */
+func GetOneUser(name string) *User {
+	var user = new(User)
+	var db *pg.DB = Connect()
+	defer db.Close()
+	err := db.Model(user).Where("name = ?", name).Select()
+	if err != nil {
+		log.Printf("User query error: %v\n", err)
+		return nil
+	}
+	return user
 }

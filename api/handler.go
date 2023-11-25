@@ -7,7 +7,7 @@ import (
 )
 
 var gramsPerBalloon = 14.0
-var conversions *(types.Conversion)
+var conversions *types.Conversion
 
 func Calculate(weight string, weightType string) string {
 	if conversions == nil {

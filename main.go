@@ -7,10 +7,7 @@ import (
 	"github.com/cata85/balloons/db"
 	helper "github.com/cata85/balloons/helpers"
 	"github.com/gin-gonic/gin"
-	"github.com/gorilla/sessions"
 )
-
-var Store = sessions.NewCookieStore([]byte("super-secret-password"))
 
 func main() {
 	config := helper.Config()
@@ -26,6 +23,8 @@ func main() {
 	router.GET("/all", api.HandlerGetAll)
 	router.GET("/all/delete/:id", api.HandlerDeleteAllSingle)
 	router.POST("/login", api.HandlerPostLogin)
+	router.POST("/signup", api.HandlerPostSignup)
+	router.GET("/logout", api.HandlerGetLogout)
 
 	err := router.Run(
 		helper.String(helper.Get(serverConfig, "host")) +

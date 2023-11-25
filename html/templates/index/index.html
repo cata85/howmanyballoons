@@ -27,23 +27,38 @@
         if (x == "" || y == "") {
             alert("Enter a Valid Username and Password");
             return false;
-        };
+        }
+        return true;
       }
     </script>
     <script>
-      function login() {
-        var x, y;
-        x = document.getElementById("username").value;
-        y = document.getElementById("password").value;
-        if (x == "" || y == "") {
-            alert("Enter a Valid Username and Password");
-            return false;
-        };
-
+      async function login() {
+        if (!empty()) {
+          return false;
+        }
         const data = new FormData();
             data.append('username', document.getElementById("username").value); 
             data.append('password', document.getElementById("password").value);
-        fetch('/login', {
+            let response = await fetch('/login', {
+            method: 'post',
+            body: data,
+        })
+        .then(function () {
+          document.getElementById("username").value = "";
+          document.getElementById("password").value = "";
+        });
+        location.reload();
+      }
+    </script>
+    <script>
+      function signup() {
+        if (!empty()) {
+          return false;
+        }
+        const data = new FormData();
+            data.append('username', document.getElementById("username").value); 
+            data.append('password', document.getElementById("password").value);
+        fetch('/signup', {
             method: 'post',
             body: data,
         })
@@ -53,18 +68,35 @@
         });
       }
     </script>
+    <script>
+      async function logout() {
+        let response = await fetch('/logout', {
+            method: 'get',
+        });
+        location.reload();
+      }
+    </script>
   </head>
   <body>
+    {{ if .is_admin }}
     <button id="all" onclick="goToAll()">All Objects</button>
+    {{ end }}
     <button id="github" onclick="goToGithub()">Github</button>
     <br>
+    {{ if not .logged_in }}
     <div id="loginForm">
       <label for="username">Username:</label>
       <input type="text" id="username" name="username" />
       <label for="password">Password:</label>
       <input type="password" id="password" name="password" />
-      <input id="loginSubmit" type="submit" value="Submit" onclick="return login()" />
+      <input id="loginSubmit" type="submit" value="Sign In" onclick="return login()" />
+      <input id="loginSubmit" type="submit" value="Sign Up" onclick="return signup()" />
     </div>
+    {{ else }}
+    <div>
+      <input id="logout" type="submit" value="Logout" onclick="logout()" />
+    </div>
+    {{ end }}
     <br>
     <img src="/html/static/balloons2done.png" />
     <form action="/" method="POST" id="balloonObjects">
