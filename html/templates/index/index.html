@@ -19,17 +19,49 @@
         window.open("https://github.com/cata85/howmanyballoons")
       }
     </script>
+    <script>
+      function empty() {
+        var x, y;
+        x = document.getElementById("username").value;
+        y = document.getElementById("password").value;
+        if (x == "" || y == "") {
+            alert("Enter a Valid Username and Password");
+            return false;
+        };
+      }
+    </script>
+    <script>
+      function login() {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+          if (this.readyState == 4 && this.status == 200) {
+            //window.location.href = '/';
+            $.get('/');
+          }
+        };
+        xhttp.open("POST", "/login", false);
+        xhttp.send();
+      }
+    </script>
   </head>
   <body>
     <button id="all" onclick="goToAll()">All Objects</button>
     <button id="github" onclick="goToGithub()">Github</button>
     <br>
+    <form method="post" onsubmit='login()' id="login">
+      <label for="username">Username:</label>
+      <input type="text" id="username" name="username" />
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password" />
+      <input id="loginSubmit" type="submit" value="Submits" onclick="return empty()" />
+    </form>
+    <br>
     <img src="/html/static/balloons2done.png" />
-    <form action="/" method="POST">
+    <form action="/" method="POST" id="balloonObjects">
       <label for="itemName">Item Name:</label>
-      <input type="text" id="itemName" name="itemName" value="{{.itemName}}">
+      <input type="text" id="itemName" name="itemName" value="{{.itemName}}" />
       <label for="itemWeight">Item Weight (pounds):</label>
-      <input type="text" id="itemWeight" name="itemWeight" value="{{.itemWeight}}">
+      <input type="text" id="itemWeight" name="itemWeight" value="{{.itemWeight}}" />
       <label for="cars">Choose a car:</label>
       <select name="itemWeightType" id="itemWeightType">
         <option value="Pound" {{if (eq .itemWeightType "Pound")}}selected{{end}}>Pound</option>
@@ -43,10 +75,10 @@
         <option value="MetricTon" {{if (eq .itemWeightType "MetricTon")}}selected{{end}}>Metric Ton</option>
       </select>
       <br><br>
-      <input type="submit" value="Submit">
+      <input type="submit" value="Submit" id="balloonObjectsSubmit" />
     </form>
     <br><br><br><br>
     <lable># Balloons:</label>
-    <input type="text" id="itemBalloons" name="itemBalloons" readonly="true" value="{{.itemBalloons}}">
+    <input type="text" id="itemBalloons" name="itemBalloons" readonly="true" value="{{.itemBalloons}}" />
   </body>
 </html>

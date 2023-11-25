@@ -34,5 +34,6 @@ func InitializeTables() {
 	var db *pg.DB = Connect()
 	defer db.Close()
 	CreateBalloonObjectTable(db)
+	CreateUserTable(db)
 	return
 }

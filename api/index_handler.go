@@ -44,7 +44,9 @@ func HandlerPostIndex(c *gin.Context) {
 	balloonObject.Name = c.PostForm("itemName")
 	balloonObject.Weight = c.PostForm("itemWeight")
 	balloonObject.WeightType = c.PostForm("itemWeightType")
-	balloonObject.Balloons = Calculate(balloonObject.Weight, balloonObject.WeightType)
+	if balloonObject.Balloons != "" {
+		balloonObject.Balloons = Calculate(balloonObject.Weight, balloonObject.WeightType)
+	}
 	db.SaveBalloonObject(*balloonObject)
 	c.HTML(http.StatusOK, "index.html", gin.H{
 		"itemName":       balloonObject.Name,

@@ -21,6 +21,11 @@ type Conversion struct {
 	MetricTon   float64
 }
 
+type User struct {
+	Name     string
+	Password string
+}
+
 func GetConversionField(c *Conversion, field string) float64 {
 	r := reflect.ValueOf(c)
 	f := reflect.Indirect(r).FieldByName(field)
