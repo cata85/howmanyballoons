@@ -14,9 +14,16 @@
         $.get("/all");
     }
     </script>
+    <script>
+      function goToGithub(){ 
+        window.open("https://github.com/cata85/howmanyballoons")
+      }
+    </script>
   </head>
   <body>
-    <button id="all" onclick="goToAll()">All Objects</button><br>
+    <button id="all" onclick="goToAll()">All Objects</button>
+    <button id="github" onclick="goToGithub()">Github</button>
+    <br>
     <img src="/html/static/balloons2done.png" />
     <form action="/" method="POST">
       <label for="itemName">Item Name:</label>
