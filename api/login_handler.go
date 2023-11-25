@@ -1,7 +1,6 @@
 package api
 
 import (
-	"log"
 	"net/http"
 
 	"github.com/cata85/balloons/types"
@@ -25,7 +24,6 @@ func HandlerPostLogin(c *gin.Context) {
 	user.Name = c.PostForm("username")
 	hash, _ := bcrypt.GenerateFromPassword([]byte(c.PostForm("password")), 0)
 	user.Password = string(hash)
-	log.Printf("Password: %v\n", user.Password)
 	c.HTML(http.StatusOK, "index.html", gin.H{
 		"itemName":       balloonObject.Name,
 		"itemWeight":     balloonObject.Weight,

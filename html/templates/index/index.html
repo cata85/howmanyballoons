@@ -32,15 +32,25 @@
     </script>
     <script>
       function login() {
-        var xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function() {
-          if (this.readyState == 4 && this.status == 200) {
-            //window.location.href = '/';
-            $.get('/');
-          }
+        var x, y;
+        x = document.getElementById("username").value;
+        y = document.getElementById("password").value;
+        if (x == "" || y == "") {
+            alert("Enter a Valid Username and Password");
+            return false;
         };
-        xhttp.open("POST", "/login", false);
-        xhttp.send();
+
+        const data = new FormData();
+            data.append('username', document.getElementById("username").value); 
+            data.append('password', document.getElementById("password").value);
+        fetch('/login', {
+            method: 'post',
+            body: data,
+        })
+        .then(function () {
+          document.getElementById("username").value = "";
+          document.getElementById("password").value = "";
+        });
       }
     </script>
   </head>
@@ -48,13 +58,13 @@
     <button id="all" onclick="goToAll()">All Objects</button>
     <button id="github" onclick="goToGithub()">Github</button>
     <br>
-    <form method="post" onsubmit='login()' id="login">
+    <div id="loginForm">
       <label for="username">Username:</label>
       <input type="text" id="username" name="username" />
       <label for="password">Password:</label>
       <input type="password" id="password" name="password" />
-      <input id="loginSubmit" type="submit" value="Submits" onclick="return empty()" />
-    </form>
+      <input id="loginSubmit" type="submit" value="Submit" onclick="return login()" />
+    </div>
     <br>
     <img src="/html/static/balloons2done.png" />
     <form action="/" method="POST" id="balloonObjects">
