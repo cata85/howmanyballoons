@@ -1,10 +1,17 @@
 package api
 
 import (
+	"os"
 	"strconv"
 
+	helper "github.com/cata85/balloons/helpers"
 	"github.com/cata85/balloons/types"
+	"github.com/gorilla/sessions"
 )
+
+var user *types.User
+var balloonObject *types.BalloonObject
+var store *sessions.CookieStore
 
 var gramsPerBalloon = 14.0
 var conversions *types.Conversion
@@ -28,4 +35,19 @@ func Calculate(weight string, weightType string) string {
 	weightGrams := weightOriginal / float64(weightConversion)
 	balloons := weightGrams / gramsPerBalloon
 	return strconv.FormatFloat(balloons, 'f', -1, 64)
+}
+
+func Initialize() {
+	if user == nil {
+		user = new(types.User)
+	}
+	if balloonObject == nil {
+		balloonObject = new(types.BalloonObject)
+		balloonObject.WeightType = "Pound"
+	}
+	if store == nil {
+		config := helper.Config()
+		gorillaConfig := config["gorilla"]
+		store = sessions.NewCookieStore([]byte(os.Getenv(helper.String(helper.Get(gorillaConfig, "key")))))
+	}
 }

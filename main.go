@@ -14,6 +14,7 @@ func main() {
 	serverConfig := config["server"]
 
 	db.InitializeTables()
+	api.Initialize()
 	router := gin.Default()
 	router.LoadHTMLGlob("html/templates/*/*.html")
 	router.Static("/html/static", "./html/static")

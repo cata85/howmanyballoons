@@ -2,17 +2,10 @@ package api
 
 import (
 	"net/http"
-	"os"
 
 	"github.com/cata85/balloons/db"
-	helper "github.com/cata85/balloons/helpers"
-	"github.com/cata85/balloons/types"
 	"github.com/gin-gonic/gin"
-	"github.com/gorilla/sessions"
 )
-
-var balloonObject *types.BalloonObject
-var store *sessions.CookieStore
 
 /**
  * Method:   GET
@@ -20,16 +13,6 @@ var store *sessions.CookieStore
  * Default homepage for the User.
  */
 func HandlerGetIndex(c *gin.Context) {
-	if balloonObject == nil {
-		balloonObject = new(types.BalloonObject)
-		balloonObject.WeightType = "Pound"
-	}
-	if store == nil {
-		config := helper.Config()
-		gorillaConfig := config["gorilla"]
-		store = sessions.NewCookieStore([]byte(os.Getenv(helper.String(helper.Get(gorillaConfig, "key")))))
-	}
-
 	session, _ := store.Get(c.Request, "session")
 	if session.Values["name"] == nil {
 		session.Values["name"] = ""
@@ -56,10 +39,6 @@ func HandlerGetIndex(c *gin.Context) {
  * Sends the balloon object to be calculated and upserts into postgres
  */
 func HandlerPostIndex(c *gin.Context) {
-	if balloonObject == nil {
-		balloonObject = new(types.BalloonObject)
-		balloonObject.WeightType = "Pound"
-	}
 	session, _ := store.Get(c.Request, "session")
 
 	balloonObject.Name = c.PostForm("itemName")

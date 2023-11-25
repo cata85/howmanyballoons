@@ -4,12 +4,9 @@ import (
 	"net/http"
 
 	"github.com/cata85/balloons/db"
-	"github.com/cata85/balloons/types"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
 )
-
-var user *types.User
 
 /**
  * Method:   POST
@@ -17,9 +14,6 @@ var user *types.User
  * When the user submits username and password to login.
  */
 func HandlerPostLogin(c *gin.Context) {
-	if user == nil {
-		user = new(types.User)
-	}
 	session, _ := store.Get(c.Request, "session")
 
 	user.Name = c.PostForm("username")
@@ -57,9 +51,6 @@ func HandlerPostLogin(c *gin.Context) {
  * When the user submits username and password to signup.
  */
 func HandlerPostSignup(c *gin.Context) {
-	if user == nil {
-		user = new(types.User)
-	}
 	session, _ := store.Get(c.Request, "session")
 
 	user.Name = c.PostForm("username")
@@ -83,9 +74,6 @@ func HandlerPostSignup(c *gin.Context) {
  * Logs the user out.
  */
 func HandlerGetLogout(c *gin.Context) {
-	if user == nil {
-		user = new(types.User)
-	}
 	session, _ := store.Get(c.Request, "session")
 	session.Values["name"] = ""
 	session.Values["logged_in"] = false
