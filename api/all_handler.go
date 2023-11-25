@@ -13,11 +13,16 @@ import (
  * Display's all the saved balloon objects.
  */
 func HandlerGetAll(c *gin.Context) {
-	var balloonObjects, _ = db.GetAllBalloonObjects()
+	session, _ := store.Get(c.Request, "session")
+	if session.Values["is_admin"] == true { // The compiler didn't like session.Values["is_admin"]
+		var balloonObjects, _ = db.GetAllBalloonObjects()
 
-	c.HTML(http.StatusOK, "all.html", gin.H{
-		"balloonObjects": balloonObjects,
-	})
+		c.HTML(http.StatusOK, "all.html", gin.H{
+			"balloonObjects": balloonObjects,
+		})
+	} else {
+		c.Redirect(http.StatusFound, "/")
+	}
 }
 
 /**
@@ -30,11 +35,16 @@ func HandlerGetAll(c *gin.Context) {
  *        worked smoothly with the updates.
  */
 func HandlerDeleteAllSingle(c *gin.Context) {
-	id := c.Param("id")
-	db.DeleteSingle(id)
-	var balloonObjects, _ = db.GetAllBalloonObjects()
+	session, _ := store.Get(c.Request, "session")
+	if session.Values["is_admin"] == true { // The compiler didn't like session.Values["is_admin"]
+		id := c.Param("id")
+		db.DeleteSingle(id)
+		var balloonObjects, _ = db.GetAllBalloonObjects()
 
-	c.HTML(http.StatusOK, "all.html", gin.H{
-		"balloonObjects": balloonObjects,
-	})
+		c.HTML(http.StatusOK, "all.html", gin.H{
+			"balloonObjects": balloonObjects,
+		})
+	} else {
+		c.Redirect(http.StatusFound, "/")
+	}
 }
