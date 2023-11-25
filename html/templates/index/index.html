@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>How Many Balloons?</title>
+    <script src="https://code.jquery.com/jquery-latest.min.js"></script>
+    <script>
+      $(document).ready(function(){
+      window.history.replaceState("","",window.location.href)
+      });
+    </script>
+    <script>
+      function goToAll(){ 
+        window.location.href = '/all';
+        $.get("/all");
+    }
+    </script>
+  </head>
+  <body>
+    <button id="all" onclick="goToAll()">All Objects</button><br>
+    <img src="/html/static/balloons2done.png" />
+    <form action="/" method="POST">
+      <label for="itemName">Item Name:</label>
+      <input type="text" id="itemName" name="itemName" value="{{.itemName}}">
+      <label for="itemWeight">Item Weight (pounds):</label>
+      <input type="text" id="itemWeight" name="itemWeight" value="{{.itemWeight}}">
+      <label for="cars">Choose a car:</label>
+      <select name="itemWeightType" id="itemWeightType">
+        <option value="Pound" {{if (eq .itemWeightType "Pound")}}selected{{end}}>Pound</option>
+        <option value="Ounce" {{if (eq .itemWeightType "Ounce")}}selected{{end}}>Ounce</option>
+        <option value="UsTon" {{if (eq .itemWeightType "UsTon")}}selected{{end}}>US Ton</option>
+        <option value="ImperialTon" {{if (eq .itemWeightType "ImperialTon")}}selected{{end}}>Imperial Ton</option>
+        <option value="Microgram" {{if (eq .itemWeightType "Microgram")}}selected{{end}}>Microgram</option>
+        <option value="Milligram" {{if (eq .itemWeightType "Milligram")}}selected{{end}}>Milligram</option>
+        <option value="Gram" {{if (eq .itemWeightType "Gram")}}selected{{end}}>Gram</option>
+        <option value="Kilogram" {{if (eq .itemWeightType "Kilogram")}}selected{{end}}>Kilogram</option>
+        <option value="MetricTon" {{if (eq .itemWeightType "MetricTon")}}selected{{end}}>Metric Ton</option>
+      </select>
+      <br><br>
+      <input type="submit" value="Submit">
+    </form>
+    <br><br><br><br>
+    <lable># Balloons:</label>
+    <input type="text" id="itemBalloons" name="itemBalloons" readonly="true" value="{{.itemBalloons}}">
+  </body>
+</html>
