@@ -1,0 +1,16 @@
+# Server configurations
+server:
+  host: "localhost"
+  port: "8080"
+
+# Database configurations
+database:
+  host: "localhost:5432"
+  username: "postgres"
+  password: "9U48YDL0SXrn/0zAKSrZfw=="
+  key: "POSTGRES_KEY"
+  iv: "POSTGRES_IV"
+
+# Gorilla
+gorilla:
+  key: "GORILLA_SESSION_KEY"
