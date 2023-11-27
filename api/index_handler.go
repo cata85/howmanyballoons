@@ -20,15 +20,17 @@ func HandlerGetIndex(c *gin.Context) {
 		session.Values["is_admin"] = false
 		_ = session.Save(c.Request, c.Writer)
 	}
+	savedBalloonObjects, _ := db.GetAllActiveBalloonObjects()
 
 	c.HTML(http.StatusOK, "index.html", gin.H{
-		"itemName":       balloonObject.Name,
-		"itemWeight":     balloonObject.Weight,
-		"itemBalloons":   balloonObject.Balloons,
-		"itemWeightType": balloonObject.WeightType,
-		"name":           session.Values["name"],
-		"is_admin":       session.Values["is_admin"],
-		"logged_in":      session.Values["logged_in"],
+		"itemName":            balloonObject.Name,
+		"itemWeight":          balloonObject.Weight,
+		"itemBalloons":        balloonObject.Balloons,
+		"itemWeightType":      balloonObject.WeightType,
+		"savedBalloonObjects": savedBalloonObjects,
+		"name":                session.Values["name"],
+		"is_admin":            session.Values["is_admin"],
+		"logged_in":           session.Values["logged_in"],
 	})
 }
 
@@ -46,13 +48,15 @@ func HandlerPostIndex(c *gin.Context) {
 	balloonObject.WeightType = c.PostForm("itemWeightType")
 	balloonObject.Balloons = Calculate(balloonObject.Weight, balloonObject.WeightType)
 	db.SaveBalloonObject(*balloonObject)
+	savedBalloonObjects, _ := db.GetAllActiveBalloonObjects()
 	c.HTML(http.StatusOK, "index.html", gin.H{
-		"itemName":       balloonObject.Name,
-		"itemWeight":     balloonObject.Weight,
-		"itemBalloons":   balloonObject.Balloons,
-		"itemWeightType": balloonObject.WeightType,
-		"name":           session.Values["name"],
-		"is_admin":       session.Values["is_admin"],
-		"logged_in":      session.Values["logged_in"],
+		"itemName":            balloonObject.Name,
+		"itemWeight":          balloonObject.Weight,
+		"itemBalloons":        balloonObject.Balloons,
+		"itemWeightType":      balloonObject.WeightType,
+		"savedBalloonObjects": savedBalloonObjects,
+		"name":                session.Values["name"],
+		"is_admin":            session.Values["is_admin"],
+		"logged_in":           session.Values["logged_in"],
 	})
 }

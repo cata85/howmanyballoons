@@ -1,6 +1,7 @@
 package api
 
 import (
+	"math"
 	"os"
 	"strconv"
 
@@ -29,12 +30,15 @@ func Calculate(weight string, weightType string) string {
 		conversions.Kilogram = 0.001
 		conversions.MetricTon = 1e-6
 	}
+	if weight == "" {
+		return ""
+	}
 	weightConversion := types.GetConversionField(conversions, weightType)
 
 	weightOriginal, _ := strconv.ParseFloat(weight, 64)
 	weightGrams := weightOriginal / float64(weightConversion)
 	balloons := weightGrams / gramsPerBalloon
-	return strconv.FormatFloat(balloons, 'f', -1, 64)
+	return strconv.FormatInt(int64(math.Ceil(balloons)), 10)
 }
 
 func Initialize() {
@@ -44,6 +48,7 @@ func Initialize() {
 	if balloonObject == nil {
 		balloonObject = new(types.BalloonObject)
 		balloonObject.WeightType = "Pound"
+		balloonObject.CurrentBalloonObject = ""
 	}
 	if store == nil {
 		config := helper.Config()

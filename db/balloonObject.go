@@ -43,7 +43,7 @@ func CreateBalloonObjectTable(db *pg.DB) error {
 func (balloonObject *BalloonObject) Save(db *pg.DB) error {
 	_, insertErr := db.Model(balloonObject).
 		OnConflict("(name) DO UPDATE").
-		Set("weight = ?weight, balloons = ?balloons, updated_at = ?updated_at, is_active = ?is_active").
+		Set("weight = ?weight, weight_type=?weight_type, balloons = ?balloons, updated_at = ?updated_at, is_active = ?is_active").
 		Insert()
 	if insertErr != nil {
 		log.Printf("Insert Error: %v\n", insertErr)
@@ -82,7 +82,7 @@ func (balloonObject *BalloonObject) SaveMany(db *pg.DB, balloonObjects []*Balloo
  * The balloon object is sent over to the balloon's "Save()" method.
  */
 func SaveBalloonObject(balloonObject types.BalloonObject) {
-	if balloonObject.Name != "" {
+	if balloonObject.Name != "" && balloonObject.Weight != "" {
 		var db *pg.DB = Connect()
 		defer db.Close()
 		newBalloonObject := &BalloonObject{
@@ -122,6 +122,21 @@ func GetAllBalloonObjects() ([]*BalloonObject, error) {
 	var db *pg.DB = Connect()
 	defer db.Close()
 	_, err := db.Query(&balloonObjects, `SELECT * FROM balloon_objects_collection`)
+	if err != nil {
+		log.Printf("Query Error: %v\n", err)
+		return nil, err
+	}
+	return balloonObjects, nil
+}
+
+/**
+ * This grabs all balloon objects within the balloon_objects_collection table.
+ */
+func GetAllActiveBalloonObjects() ([]*BalloonObject, error) {
+	var balloonObjects []*BalloonObject
+	var db *pg.DB = Connect()
+	defer db.Close()
+	_, err := db.Query(&balloonObjects, `SELECT * FROM balloon_objects_collection WHERE is_active`)
 	if err != nil {
 		log.Printf("Query Error: %v\n", err)
 		return nil, err
