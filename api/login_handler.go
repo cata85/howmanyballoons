@@ -35,10 +35,10 @@ func HandlerPostLogin(c *gin.Context) {
 	}
 
 	c.HTML(http.StatusOK, "index.html", gin.H{
-		"itemName":       balloonObject.Name,
-		"itemWeight":     balloonObject.Weight,
-		"itemBalloons":   balloonObject.Balloons,
-		"itemWeightType": balloonObject.WeightType,
+		"itemName":       session.Values["item_name"],
+		"itemWeight":     session.Values["item_weight"],
+		"itemBalloons":   session.Values["item_balloons"],
+		"itemWeightType": session.Values["weight_type"],
 		"name":           session.Values["name"],
 		"is_admin":       session.Values["is_admin"],
 		"logged_in":      session.Values["logged_in"],
@@ -58,10 +58,10 @@ func HandlerPostSignup(c *gin.Context) {
 	user.Password = string(hash)
 	db.SaveUser(*user)
 	c.HTML(http.StatusOK, "index.html", gin.H{
-		"itemName":       balloonObject.Name,
-		"itemWeight":     balloonObject.Weight,
-		"itemBalloons":   balloonObject.Balloons,
-		"itemWeightType": balloonObject.WeightType,
+		"itemName":       session.Values["item_name"],
+		"itemWeight":     session.Values["item_weight"],
+		"itemBalloons":   session.Values["item_balloons"],
+		"itemWeightType": session.Values["weight_type"],
 		"name":           session.Values["name"],
 		"is_admin":       session.Values["is_admin"],
 		"logged_in":      session.Values["logged_in"],
@@ -81,10 +81,10 @@ func HandlerGetLogout(c *gin.Context) {
 	_ = session.Save(c.Request, c.Writer)
 
 	c.HTML(http.StatusOK, "index.html", gin.H{
-		"itemName":       balloonObject.Name,
-		"itemWeight":     balloonObject.Weight,
-		"itemBalloons":   balloonObject.Balloons,
-		"itemWeightType": balloonObject.WeightType,
+		"itemName":       session.Values["item_name"],
+		"itemWeight":     session.Values["item_weight"],
+		"itemBalloons":   session.Values["item_balloons"],
+		"itemWeightType": session.Values["weight_type"],
 		"name":           session.Values["name"],
 		"is_admin":       session.Values["is_admin"],
 		"logged_in":      session.Values["logged_in"],

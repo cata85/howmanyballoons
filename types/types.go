@@ -3,11 +3,10 @@ package types
 import "reflect"
 
 type BalloonObject struct {
-	Name                 string
-	Weight               string
-	Balloons             string
-	WeightType           string
-	CurrentBalloonObject string
+	Name       string
+	Weight     string
+	Balloons   string
+	WeightType string
 }
 
 type Conversion struct {

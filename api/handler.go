@@ -45,11 +45,6 @@ func Initialize() {
 	if user == nil {
 		user = new(types.User)
 	}
-	if balloonObject == nil {
-		balloonObject = new(types.BalloonObject)
-		balloonObject.WeightType = "Pound"
-		balloonObject.CurrentBalloonObject = ""
-	}
 	if store == nil {
 		config := helper.Config()
 		gorillaConfig := config["gorilla"]
